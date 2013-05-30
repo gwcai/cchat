@@ -1,0 +1,17 @@
+#include<stdlib.h>
+#include<string.h>
+
+struct Node{
+        char name[20];
+        int fd;
+        char passwd[10];
+        struct user *next;
+}user;
+struct user *root,*p;
+struct user user,node;
+ 
+void create_userlist();
+int insert(struct user *node);
+int delete_user(struct user *node);
+int search(char *name);
+void printuser();
