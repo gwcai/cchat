@@ -48,6 +48,12 @@ int main()
 	}
 	else
  		printf("REC:%s\n",buffer);
+	bzero(data,sizeof(data));
+ //	if((scanf("%s",data)) > 0)
+ //	{
+  //		write(cfd,data,strlen(data));
+ //	}
+
 }
  getchar();
  close(cfd);

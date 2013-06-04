@@ -2,66 +2,102 @@
 #include"user.h"
 
 int mount = 0;
-
-void create_userlist()
+int inituser(user **root)
 {
-	root = malloc(sizeof(struct user*));
-	memset(root->name,'\0',sizeof(root->name));
-	memset(root->passwd,'\0',sizeof(root->passwd));
-	root->fd = 0;
-	root->next = NULL;
-}
-int insert(struct user *node)
-{
-	if(root == NULL)
-		create_userlist();
-	p = root;
-	while((p->next != NULL))
+  	*root = (struct user*)malloc(sizeof(struct user));
+	if(*root != NULL)
 	{
-		if(p->fd == node->fd)	//已经登录了
-			return 0;
-		p = p->next;
-	}
-	p->next = node;
-	p = p->next;
-	p->next = NULL;
-	mount++;
-	return 1;
-}
-int search(char *name)
-{
-	if(mount == 0) return 0;
-	p = root;
-	while(p->next != NULL)
-	{
-		p = p->next;
-		if(strcmp(p->name,name) == 0)
+		memset(*root,0,sizeof(struct user));
+		(*root)->next = NULL;
 		return 1;
 	}
 	return 0;
 }
-int delete_user(struct user *node)
+
+int insert(user **root,user *node)
 {
-	p = root;
-	while(p->next != NULL)
+	
+	struct user *head;
+	struct user *temp;
+	head = *root;
+	temp = head;
+	printf("开始插入\n");
+	while(head->next != NULL)
+	{	
+		head = head->next;
+	}
+	head->next = node;
+	*root= temp;
+	mount++;
+	return 1;
+}
+int search(user *root,char *name)
+{
+	struct user *p = root->next;
+	if(mount == 0) return 0;
+	while(p != NULL)
 	{
-		if(p->next == node)
-		{
-			p->next = p->next->next;
-			mount--;
-			free(node);
-			return 1;
-		}			
+
+		if(strcmp(p->name,name) == 0)
+		return 1;		
+		p = p->next;
 	}
 	return 0;
 }
-void printuser()
+int delete_user(user *root,char *name)
 {
-	p = root;
-	printf("当前在线用户列表:\n");
-	while(p->next != NULL)
+	struct user *p = root->next;
+	struct user *pre = root;
+	while(p != NULL)
 	{
-		p = p->next;
-		printf("%s\n",p->name);
+		if(strcmp(p->name,name) == 0)
+		{
+			pre->next = p->next;
+			free(p);  //释放节点
+			mount--;
+			return 1;
+		}else{
+		  pre = p;
+		  p = p->next;
+		}
+	}
+	return 0;
+}
+void printuser(user *root)
+{
+	struct user *q = root->next;
+	//printf("%s\n",(*root)->next->name);
+	printf("当前在线用户列表:\n");
+	while(q != NULL)
+	{
+		printf("%s\n",q->name);
+		q = q->next;
 	}
 }
+/*
+int main()
+{
+	struct user *root = NULL;
+	struct user *node;
+
+	inituser(&root);  //初始化
+
+	int i = 5;
+	char name[20];
+	while(i>0)
+	{
+		node = (struct user*)malloc(sizeof(struct user));
+		memset(node,0,sizeof(struct user));
+		scanf("%s",node->name);
+		node->next = NULL;
+		insert(&root,node);
+		i--;
+	}
+	if(search(root,"hello"))
+	  printf("YES\n");
+  	else printf("NO\n");
+  	if(delete_user(root,"hello"))
+	  printf("sucess\n");
+  	else printf("failed\n");
+	printuser(root);
+}*/
